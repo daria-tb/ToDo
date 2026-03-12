@@ -1,0 +1,66 @@
+@page "/todo"
+@rendermode InteractiveAuto
+
+<div style="max-width: 500px; margin: 50px auto; font-family: 'Segoe UI', Arial, sans-serif; color: #2c3e50;">
+    
+    <header style="border-bottom: 2px solid #34495e; padding-bottom: 10px; margin-bottom: 25px;">
+        <h2 style="margin: 0; font-weight: 600; color: #34495e;">Lab Task Tracker</h2>
+        <small style="color: #7f8c8d; text-transform: uppercase;">ONU • Applied Mathematics</small>
+    </header>
+
+
+    <div style="display: flex; gap: 10px; margin-bottom: 30px;">
+        <input @bind="newTask" 
+               @onkeyup="HandleKeyUp"
+               placeholder="Назва лабораторної або завдання..." 
+               style="flex-grow: 1; padding: 12px; border: 1px solid #dcdde1; border-radius: 6px; outline: none;" />
+        <button @onclick="AddTask" 
+                style="padding: 10px 20px; background-color: #34495e; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: bold;">
+            Додати
+        </button>
+    </div>
+
+    <div style="list-style: none; padding: 0;">
+        @foreach (var task in tasks)
+        {
+            <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px; background: #f9f9f9; border-radius: 6px; margin-bottom: 8px; border-left: 4px solid #34495e;">
+                <span style="font-size: 1rem;">@task</span>
+                <button @onclick="() => tasks.Remove(task)" 
+                        style="background: none; border: none; color: #e74c3c; cursor: pointer; font-size: 0.8rem; font-weight: bold;">
+                    ВИДАЛИТИ
+                </button>
+            </div>
+        }
+    </div>
+
+    @if (tasks.Count == 0)
+    {
+        <p style="text-align: center; color: #bdc3c7; margin-top: 30px; font-style: italic;">
+            Всі завдання виконано. Система вільна.
+        </p>
+    }
+</div>
+
+@code {
+    private string? newTask;
+    private List<string> tasks = new() 
+    { 
+        "Лабораторна №1: Теорія ймовірностей", 
+        "Моделювання системи в tinkercad",
+        "Підготовка до заліку з дискретної математики"
+    };
+
+    private void AddTask()
+    {
+        if (!string.IsNullOrWhiteSpace(newTask))
+        {
+            tasks.Add(newTask);
+            newTask = string.Empty;
+        }
+    }
+
+    private void HandleKeyUp(KeyboardEventArgs e)
+    {
+        if (e.Key == "Enter") AddTask();
+    }
+}
